@@ -48,5 +48,6 @@ jobs:
             ssh-keyscan github.com >> ~/.ssh/known_hosts
             cd /opt/it-tools
             git pull origin main
-            INNER_IMAGE=${{ secrets.ALIYUN_ACR_REGISTRY_INNER }}/endiow/it-tools:latest docker compose up -d
+            export INNER_IMAGE=${{ secrets.ALIYUN_ACR_REGISTRY_INNER }}/endiow/it-tools:latest
+            docker compose up -d
             docker compose ps
