@@ -1,9 +1,7 @@
 name: Build and Deploy IT-Tools
-
 on:
   push:
     branches: [ main ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,8 +36,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    env:
-      IMAGE: ${{ needs.build.outputs.image_tag }}
     steps:
       - name: Deploy to ECS via SSH
         uses: appleboy/ssh-action@v1.2.0
@@ -48,12 +44,9 @@ jobs:
           username: ${{ secrets.ECS_SSH_USER }}
           key: ${{ secrets.ECS_SSH_PRIVATE_KEY }}
           script: |
-            INNER_IMAGE="${{ secrets.ALIYUN_ACR_REGISTRY_INNER }}/endiow/it-tools:latest"
-            echo "======== 拉取新镜像 ========"
-            docker pull $INNER_IMAGE
-            echo "======== 删除旧容器 ========"
-            docker rm -f it-tools
-            echo "======== 启动新容器 ========"
-            docker run -d -p 8080:80 --name it-tools $INNER_IMAGE
-            echo "======== 查看运行状态 ========"
-            docker ps | grep it-tools
+            set -e
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            cd /opt/it-tools
+            git pull origin main
+            INNER_IMAGE=${{ secrets.ALIYUN_ACR_REGISTRY_INNER }}/endiow/it-tools:latest docker compose up -d
+            docker compose ps
