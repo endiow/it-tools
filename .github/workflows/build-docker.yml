@@ -21,8 +21,9 @@ jobs:
       - name: Set image meta
         id: meta
         run: |
-          echo "IMAGE=${{ secrets.ALIYUN_ACR_REGISTRY }}/it-tools:${{ github.sha }}" >> $GITHUB_OUTPUT
-          echo "IMAGE_LATEST=${{ secrets.ALIYUN_ACR_REGISTRY }}/it-tools:latest" >> $GITHUB_OUTPUT
+          echo "IMAGE=${{ secrets.ALIYUN_ACR_REGISTRY }}/endiow/it-tools:${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "IMAGE_LATEST=${{ secrets.ALIYUN_ACR_REGISTRY }}/endiow/it-tools:latest" >> $GITHUB_OUTPUT
+
 
       - name: Build & push docker image
         uses: docker/build-push-action@v6
