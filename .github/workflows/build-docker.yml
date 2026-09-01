@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu‑latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,11 +21,11 @@ jobs:
       - name: Set image meta
         id: meta
         run: |
-          echo "IMAGE=${{ secrets.ALIYUN_ACR_REGISTRY }}/it‑tools:${{ github.sha }}" >> $GITHUB_OUTPUT
-          echo "IMAGE_LATEST=${{ secrets.ALIYUN_ACR_REGISTRY }}/it‑tools:latest" >> $GITHUB_OUTPUT
+          echo "IMAGE=${{ secrets.ALIYUN_ACR_REGISTRY }}/it-tools:${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "IMAGE_LATEST=${{ secrets.ALIYUN_ACR_REGISTRY }}/it-tools:latest" >> $GITHUB_OUTPUT
 
       - name: Build & push docker image
-        uses: docker/build‑push‑action@v6
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
