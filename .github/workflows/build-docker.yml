@@ -1,0 +1,34 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu‑latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Aliyun ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ALIYUN_ACR_REGISTRY }}
+          username: ${{ secrets.ALIYUN_ACR_USERNAME }}
+          password: ${{ secrets.ALIYUN_ACR_PASSWORD }}
+
+      - name: Set image meta
+        id: meta
+        run: |
+          echo "IMAGE=${{ secrets.ALIYUN_ACR_REGISTRY }}/it‑tools:${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "IMAGE_LATEST=${{ secrets.ALIYUN_ACR_REGISTRY }}/it‑tools:latest" >> $GITHUB_OUTPUT
+
+      - name: Build & push docker image
+        uses: docker/build‑push‑action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.IMAGE }}
+            ${{ steps.meta.outputs.IMAGE_LATEST }}
